@@ -117,12 +117,30 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("\(userList[indexPath.row].name) position: \(indexPath.row)")
+        showToast(controller: self, message: "Nigga \(indexPath.row)", seconds: 5.0)
+    }
+    
     
     private func createTable() {
         let createTableQuery = "CREATE TABLE IF NOT EXISTS Users( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT)"
         if sqlite3_exec(db, createTableQuery, nil, nil, nil) != SQLITE_OK {
             let errMsg = String(cString: sqlite3_errmsg(db)!)
             print("Error createing table: \(errMsg)")
+        }
+    }
+    
+    func showToast(controller: UIViewController, message : String, seconds: Double) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.view.backgroundColor = UIColor.black
+        alert.view.alpha = 0.6
+        alert.view.layer.cornerRadius = 15
+        
+        controller.present(alert, animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + seconds) {
+            alert.dismiss(animated: true)
         }
     }
     
